@@ -32,7 +32,7 @@ export async function POST(request: Request) {
 			password: hashedPassword,
 			classes: [],
 		});
-		console.log(newUser);
+		// console.log(newUser);
 
 		if (!newUser) {
 			console.log("User not created");

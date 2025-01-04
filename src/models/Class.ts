@@ -7,6 +7,7 @@ export interface Class extends Document {
 	teachers: ObjectId[];
 	students: ObjectId[];
 	joiningCode: string;
+	createdAt: Date;
 }
 
 const ClassSchema: Schema<Class> = new Schema({
@@ -44,6 +45,11 @@ const ClassSchema: Schema<Class> = new Schema({
 		type: String,
 		unique: true,
 		required: true,
+	},
+	createdAt: {
+		type: Date,
+		required: true,
+		default: Date.now,
 	},
 });
 
