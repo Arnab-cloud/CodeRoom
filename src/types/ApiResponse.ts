@@ -3,7 +3,7 @@ interface classInfo {
 	className: string;
 	subject: string;
 	section: string;
-	teachers: Array<string>;
+	teachers: Array<{ fullName: string; email: string }>;
 	role: string;
 }
 

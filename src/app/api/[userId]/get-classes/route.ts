@@ -27,19 +27,27 @@ export async function GET(
 		}
 
 		const classDetails = await UserModel.aggregate([
-			{ $match: { _id: new mongoose.Types.ObjectId(userId) } },
-			{ $unwind: "$classes" },
+			{ $match: { _id: new mongoose.Types.ObjectId(userId) } }, // Match the user by ID
+			{ $unwind: "$classes" }, // Unwind the 'classes' array
 			{
 				$lookup: {
-					from: "classes",
+					from: "classes", // Lookup the 'classes' collection
 					localField: "classes.classId",
 					foreignField: "_id",
 					as: "classDetails",
 				},
 			},
-			{ $unwind: "$classDetails" },
-			{ $match: { "classDetails.isArchived": isArchived } },
-			{ $sort: { "classDetails.createdAt": -1 } },
+			{ $unwind: "$classDetails" }, // Unwind the resulting 'classDetails' array
+			{ $match: { "classDetails.isArchived": isArchived } }, // Match the archived status
+			{ $sort: { "classDetails.createdAt": -1 } }, // Sort by creation date
+			{
+				$lookup: {
+					from: "users", // Lookup the 'users' collection
+					localField: "classDetails.teachers",
+					foreignField: "_id",
+					as: "teacherDetails", // Join teacher details
+				},
+			},
 			{
 				$project: {
 					_id: 0,
@@ -50,14 +58,24 @@ export async function GET(
 					section: "$classDetails.section",
 					teachers: {
 						$map: {
-							input: "$classDetails.teachers",
+							input: "$teacherDetails", // Map through 'teacherDetails' array
 							as: "teacher",
-							in: { $toString: "$$teacher" },
+							in: {
+								fullName: {
+									$concat: [
+										"$$teacher.firstName",
+										" ",
+										"$$teacher.lastName",
+									],
+								}, // Combine first and last names
+								email: "$$teacher.email", // Include email if needed
+							},
 						},
 					},
 				},
 			},
 		]);
+
 		// console.log(classDetails);
 
 		return Response.json(

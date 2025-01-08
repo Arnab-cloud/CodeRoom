@@ -3,6 +3,7 @@ import UserModel from "@/models/User";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { ObjectId } from "mongoose";
 
 export const authOptions: NextAuthOptions = {
 	providers: [
@@ -57,13 +58,16 @@ export const authOptions: NextAuthOptions = {
 				session.user._id = token._id;
 				session.user.email = token.email;
 			}
+			// console.log("session", session);
 			return session;
 		},
 		async jwt({ token, user }) {
 			if (user) {
+				// console.log("user", user);
 				token._id = user._id?.toString();
 				token.email = user.email;
 			}
+			// console.log("token", token);
 			return token;
 		},
 	},
