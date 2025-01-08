@@ -19,51 +19,49 @@ import { toast } from "@/hooks/use-toast";
 import { ApiResponse } from "@/types/ApiResponse";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { signInValidation } from "@/schemas/signinSchema";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 
-const SigninPage: React.FC = () => {
+const SignupPage: React.FC = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter();
-	const form = useForm<z.infer<typeof signInValidation>>({
-		resolver: zodResolver(signInValidation),
+	const form = useForm<z.infer<typeof signUpValidation>>({
+		resolver: zodResolver(signUpValidation),
 		defaultValues: {
+			firstName: "",
+			lastName: "",
 			email: "",
 			password: "",
 		},
 	});
 
-	const onSubmit = async (values: z.infer<typeof signInValidation>) => {
-		setIsSubmitting(true);
+	const onSubmit = async (values: z.infer<typeof signUpValidation>) => {
+		console.log(values);
 		try {
-			console.log(values);
-			const result = await signIn("credentials", {
-				identifier: values.email,
-				password: values.password,
-				redirect: false,
+			setIsSubmitting(true);
+			const result = await axios.post<ApiResponse>(
+				"/api/sign-up",
+				values
+			);
+			console.log("sign up successful");
+			toast({
+				title: "Success",
+				description: result.data.message,
+				variant: "default",
 			});
 
-			if (result?.error) {
-				toast({
-					title: "Login Failed",
-					description: "Incorrect username or password",
-					variant: "destructive",
-				});
-			}
-
-			if (result?.url) {
-				router.replace("/home");
-			}
+			router.replace("/sign-in");
 		} catch (error) {
-			console.log("Error signing up", error);
+			const axiosError = error as AxiosError<ApiResponse>;
+			const errorMessage = axiosError.response?.data.message;
+			console.log("Error sign-up", errorMessage);
 			toast({
-				title: "Sign in failed",
+				title: "Sign-up failed",
+				description: errorMessage,
 				variant: "destructive",
 			});
+		} finally {
+			setIsSubmitting(false);
 		}
-
-		setIsSubmitting(false);
 	};
 
 	return (
@@ -74,16 +72,37 @@ const SigninPage: React.FC = () => {
 					className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow"
 				>
 					<h2 className="text-2xl font-bold text-center text-gray-800">
-						Sign In
+						Sign Up
 					</h2>
-
+					<FormField
+						name="firstName"
+						control={form.control}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>First Name</FormLabel>
+								<Input {...field} />
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						name="lastName"
+						control={form.control}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Last Name</FormLabel>
+								<Input {...field} />
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 					<FormField
 						name="email"
 						control={form.control}
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Email</FormLabel>
-								<Input {...field} placeholder="Email" />
+								<Input {...field} />
 								<FormMessage />
 							</FormItem>
 						)}
@@ -94,33 +113,29 @@ const SigninPage: React.FC = () => {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Password</FormLabel>
-								<Input
-									{...field}
-									type="password"
-									placeholder="password"
-								/>
+								<Input {...field} type="password" />
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-					<Button type="submit" disabled={isSubmitting}>
+					<Button type="submit">
 						{isSubmitting ? (
 							<>
 								<Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
 								Please Wait
 							</>
 						) : (
-							"Sign in"
+							"Sign up"
 						)}
 					</Button>
 					<div className="text-center mt-r">
 						<p>
-							Don't have an account?{" "}
+							Already a member?{" "}
 							<Link
-								href="/sign-up"
+								href="/sign-in"
 								className="text-blue-600 hover:text-blue-800"
 							>
-								Sign up
+								Sign in
 							</Link>
 						</p>
 					</div>
@@ -130,4 +145,4 @@ const SigninPage: React.FC = () => {
 	);
 };
 
-export default SigninPage;
+export default SignupPage;

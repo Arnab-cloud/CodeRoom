@@ -1,17 +1,18 @@
 import { z } from "zod";
+const nameRegex = /^[A-Za-z][A-Za-z\s'-]*[A-Za-z]$/;
 
 export const firstNameValidation = z
 	.string()
 	.min(2, "first name must be at least 2 characters")
 	.regex(
-		/^[a-zA-Z]^/,
+		nameRegex,
 		"first name must not contain number or special characters"
 	);
 export const lastNameValidation = z
 	.string()
 	.min(2, "last name must be at least 2 characters")
 	.regex(
-		/^[a-zA-Z]^/,
+		nameRegex,
 		"last name must not contain number or special characters"
 	);
 

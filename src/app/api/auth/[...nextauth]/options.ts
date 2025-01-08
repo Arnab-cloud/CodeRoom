@@ -16,14 +16,13 @@ export const authOptions: NextAuthOptions = {
 				},
 				password: {
 					label: "password",
-					type: "text",
+					type: "password",
 				},
 			},
 
 			async authorize(credentials: any): Promise<any> {
-				await dbConnect();
-
 				try {
+					await dbConnect();
 					// Find the user with email
 					const user = await UserModel.findOne({
 						email: credentials.identifier,

@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 			return Response.json(
 				{
 					success: false,
-					message: "Invlaid user data",
+					message: "Invalid user data",
 				},
 				{ status: 400 }
 			);
@@ -49,14 +49,14 @@ export async function POST(request: Request) {
 
 		return Response.json({
 			success: true,
-			message: "Ok",
+			message: "sign up successful",
 		});
 	} catch (error) {
 		console.log("Error signup", error);
 		return Response.json(
 			{
 				success: false,
-				message: "error",
+				message: "error signing up",
 			},
 			{ status: 500 }
 		);
