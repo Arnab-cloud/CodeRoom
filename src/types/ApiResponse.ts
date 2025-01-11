@@ -1,4 +1,4 @@
-interface classInfo {
+export interface classInfo {
 	classId: string;
 	className: string;
 	subject: string;

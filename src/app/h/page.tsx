@@ -26,7 +26,7 @@ const HomePage: React.FC = async () => {
 		// console.log("Classes", classes);
 
 		return (
-			<div className=" p-4 flex flex-row gap-4">
+			<div className=" p-4 flex flex-row gap-4 flex-wrap">
 				{classes &&
 					classes.map((classItem, index) => (
 						<ClassCard

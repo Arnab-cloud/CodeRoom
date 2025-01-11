@@ -25,7 +25,7 @@ export default function ClassCard({
 }: cardProps) {
 	return (
 		<div className="block hover:shadow-lg transform transition-all hover:scale-105">
-			<Link href={`/c/${classId}`}>
+			<Link href={`/h/c/${classId}`}>
 				<Card className="w-80 bg-gray-50 border border-black rounded-lg shadow-md p-4 hover:bg-gray-100">
 					<CardHeader>
 						<CardTitle className="text-lg font-semibold text-gray-800">

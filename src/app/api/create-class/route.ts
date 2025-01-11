@@ -50,7 +50,7 @@ export async function POST(request: Request) {
 		return Response.json(
 			{
 				success: true,
-				message: "Ok",
+				message: "Room Created successfully",
 				classId: newClass._id,
 			},
 			{ status: 201 }
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
 		return Response.json(
 			{
 				success: false,
-				message: "error",
+				message: "Error Creating a class",
 			},
 			{ status: 500 }
 		);

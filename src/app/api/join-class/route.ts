@@ -49,10 +49,10 @@ export async function POST(request: Request) {
 			return Response.json(
 				{
 					success: false,
-					message: "Aready added",
+					message: "User already added",
 					classId: classId.toString(),
 				},
-				{ status: 304 }
+				{ status: 400 }
 			);
 		}
 
@@ -70,7 +70,8 @@ export async function POST(request: Request) {
 			{ status: 200 }
 		);
 	} catch (error) {
-		console.log("Error joining class", error);
+		console.log("Error joining class, this running", error);
+
 		return Response.json({
 			success: false,
 			message: "Error joining class",
